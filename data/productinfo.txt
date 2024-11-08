@@ -1,0 +1,26 @@
+const fs = require('fs');
+
+class ProductsPage {
+  constructor(page) {
+    this.page = page;
+    this.productTitle = page.locator('.inventory_item_name'); // Adjust the selector as needed
+    this.productPrice = page.locator('.inventory_item_price'); // Adjust the selector as needed
+  }
+
+  async getFirstProductDetails() {
+    const name = await this.productTitle.textContent();
+    const price = await this.productPrice.textContent();
+
+    // Ensure the 'data' directory exists
+    if (!fs.existsSync('./data')) {
+      fs.mkdirSync('./data');
+    }
+
+    // Write product information to 'data/productinfo.txt'
+    fs.writeFileSync('./data/productinfo.txt', `Product: ${name}\nPrice: ${price}`);
+
+    return { name, price };
+  }
+}
+
+module.exports = ProductsPage;
